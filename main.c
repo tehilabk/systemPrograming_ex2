@@ -1,32 +1,60 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include "myBank.h"
+
 
 int main()
 {
+    bool stop = false;
     char opperationCode;
     
-    printf("Please choose a transaction type: \n O-Open Account \n B-Balance Inquiry \n D-Deposit \n W-Withdrawal \n C-Close Account \n I-Interest \n P-Print \n E-Exit");
-    scanf(" %c", &opperationCode);
-    
-    switch (getchar())
-    {
-        case 'O':
-            openAcount();
-            break;
-    
-        case 'B':
-            getBalance();
-            break;
+    while(!stop){
         
-        case 'D':
-            deposit();
-            break;
+        printf("Please choose a transaction type: \n O-Open Account \n B-Balance Inquiry \n D-Deposit \n W-Withdrawal \n C-Close Account \n I-Interest \n P-Print \n E-Exit \n");
         
-        case 'W':
-            withdrawal();
-            break;
-    };
-
-
+        
+        opperationCode = getchar();
+        
+        if(opperationCode== '\n'){
+            opperationCode = getchar();
+        }
+        switch (opperationCode)
+        {
+            case 'O':
+                openAcount();
+                break;
+        
+            case 'B':
+                getBalance();
+                break;
+            
+            case 'D':
+                deposit();
+                break;
+            
+            case 'W':
+                withdrawal();
+                break;
+                
+            case 'C':
+                closeAccount();
+                break;
+                
+            case 'I':
+                setInterest();
+                break;
+            
+            case 'P':
+                print();
+                break;
+                
+            case 'E':
+                stop = true;
+                break;
+            
+            default:    
+                printf("Invalid transaction type");
+        }   
+    }
+        
 }
-    
