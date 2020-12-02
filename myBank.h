@@ -6,9 +6,12 @@ void openAcount();
 void getBalance();
 void deposit();
 void withdrawal();
+void closeAccount();
+void setInterest();
+void print();
+
 
 int checkAmount(int amount);
 int checkAccount(int account);
-int checkAccount(int accountKey);
 
 #endif //MYBANK_H
