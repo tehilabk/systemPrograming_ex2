@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "myBank.h"
+#include "myBank.c"
 
 
 int main()
@@ -53,8 +54,8 @@ int main()
                 break;
             
             default:    
-                printf("Invalid transaction type");
-        }   
+                printf(" Invalid transaction type \n\n");
+        }
     }
         
 }

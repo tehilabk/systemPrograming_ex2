@@ -11,7 +11,7 @@ void setInterest();
 void print();
 
 
-int checkAmount(int amount);
+int checkAmount(double amount);
 int checkAccount(int account);
 
 #endif //MYBANK_H
