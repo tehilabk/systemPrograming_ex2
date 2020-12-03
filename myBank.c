@@ -1,22 +1,43 @@
 #include <stdio.h>
 //TODO define
 //TODO .2 to all printf
-
+int i;
 double bank [50][2] = {0};//inner array(amount, status) => status = 1 for closed and 0 for open
 
-
-char errorMessage[6][100] = {//errors array
+char errorMessage[11][100] = {//errors array
     "",
-    "Failed to read the account number \n",             //1
-    "This account is closed \n",                        //2
-    "Invalid Amount \n",                                //3
-    "Failed to read the amount \n",                     //4
-    "Faild. you have reached the max amount allowed \n" //5
+    "Failed to read the account number\n",             //1
+    "This account is closed\n",                        //2
+    "Invalid Amount\n",                                //3
+    "Invalid account number\n",                        //4
+    "Invalid interest rate\n",                         //5
+    "Faild. you have reached the max amount allowed\n",//6
+    "Failed to read the interest rate\n",              //7
+    "Failed to read the amount\n",                     //8
+    "Cannot deposit a negative amount\n",              //9
+    "This account is already closed\n"                 //10
 }; 
 
-int accountStatus, amountStatus, accountNum = 0, account;
+int accountStatus, amountStatus, interestStatus, accountNum = 0, account;
 double interest, amount;
 
+void initializeArray(){
+    while(i<50){
+        bank[i][1]=1;
+        i++;
+    }
+}
+
+int checkInterest(double interest){
+
+    if(interest<0){
+        return 5;
+    }
+    if(interest == 0){
+        return 7;
+    }
+    return 0;
+}
 
 /*
    returns  0 => legal amount
@@ -27,23 +48,27 @@ int checkAmount(double amount){
     if(amount<0){
         return 3;
     }
-    // if(!isdigit(amount)){
-    //     return 4;
-    // }
+    if(amount == 0){
+        return 8;
+    }
     return 0;
 }
 
 /*
-   returns  0 => legal key
-            1 => accountKey is out of bound 
+   returns  0 => legal account number
+            1 => account number is out of bound 
             2 => account closed
+            4 => negative account number
 */
-int checkAccount(int accountKey){
-    if (accountKey<901 || accountKey>950 || accountKey > accountNum+900){
+int checkAccount(int account){
+    
+    if(account<0){
+        return 4;
+    } else if (account<901 || account>950){
         return 1;
     }
 
-    if(bank[accountKey-901][1] == 1){
+    if(bank[account-901][1] == 1){
         return 2;
     }
     return 0;
@@ -54,13 +79,14 @@ int checkAccount(int accountKey){
 open a new account
 */
 void openAcount(){
-    printf("please enter amount for deposit:");
+    printf("Please enter amount for deposit: ");
+    amount=0;
     scanf("%lf", &amount);
-
-
+    fflush(stdin);
+    
     amountStatus = checkAmount(amount);
     if(amountStatus != 0){
-        printf(" %s \n", errorMessage[amountStatus]);
+        printf("%s \n", errorMessage[amountStatus]);
         return;
     }
     int i;
@@ -73,7 +99,7 @@ void openAcount(){
                 return;
             }
         }
-                printf(" %s \n", errorMessage[5]);
+                printf("%s \n", errorMessage[7]);
                 return;  
         
     }
@@ -88,6 +114,7 @@ void openAcount(){
     }
     
     bank[accountNum][0]= amount;
+    bank[accountNum][1]= 0;
     printf ("New account number is: %d \n\n" , accountNum+901);
     accountNum++;
         
@@ -99,14 +126,15 @@ get balance of account
 */
 void getBalance(){
     printf("Please enter account number:");
+    account=0;
     scanf("%d", &account);
     accountStatus = checkAccount(account); 
     if(accountStatus != 0){
-        printf(" %s \n", errorMessage[accountStatus]);
+        printf("%s \n", errorMessage[accountStatus]);
         return;
     }
     
-    printf("The balance of account number %d is: %.2lf \n\n" , account , bank[account-901][0]);
+    printf(" The balance of account number %d is: %.2lf\n\n" , account , bank[account-901][0]);
 }
 
 /*
@@ -114,47 +142,55 @@ deposit money in account
 */
 void deposit(){
     printf("Please enter account number:");
+    account=0;
     scanf("%d", &account);
-    accountStatus = checkAccount(account); 
+    accountStatus = checkAccount(account);
+
+    if(accountStatus == 1){accountStatus = 4;}//fix error message to this spesific method
     if(accountStatus!=0){
-        printf(" %s \n", errorMessage[accountStatus]);
+        printf("%s \n", errorMessage[accountStatus]);
         return;
     }
 
-    printf("Please enter the amount to deposit:");
+    printf(" Please enter the amount to deposit:");
+    amount = 0;
     scanf("%lf", &amount);
     amountStatus = checkAmount(amount);
+    if(amountStatus == 3){amountStatus=9;}//fix error message to this spesific method 
+
     if(amountStatus!=0){
-        printf(" %s \n", errorMessage[amountStatus]);
+        printf("%s \n", errorMessage[amountStatus]);
+        return;
     }
 
     bank[account-901][0] += amount;
-    printf("The new balance is: %.2lf \n", bank[account-901][0]);
+    printf(" The new balance is: %.2lf\n", bank[account-901][0]);
 }
 /*
 withdraw money from account
 */
 void withdrawal(){
     printf("Please enter account number: ");
+    account = 0;
     scanf("%d", &account);
     int accountStatus = checkAccount(account);
     if(accountStatus!=0){
-        printf(" %s \n", errorMessage[accountStatus]);
+        printf("%s \n", errorMessage[accountStatus]);
         return;
     }
 
-    printf("Please enter the amount to withdraw");
+    printf("Please enter the amount to withdraw:");
+    amount=0;
     scanf("%lf", &amount);
     
     amountStatus = checkAmount(amount);
-    if(amountStatus!=0){
-        printf(" %s \n", errorMessage[amountStatus]);
+    if(amountStatus!=0 && amountStatus!=3){
+        printf("%s \n", errorMessage[amountStatus]);
         return;
     }
-    
 
     bank[account-901][0] -= amount;
-    printf("The new balance is: %.2lf \n", bank[account-901][0]);
+    printf("The new balance is: %.2lf\n", bank[account-901][0]);
 }
 
 /*
@@ -162,15 +198,19 @@ close an account
 */
 void closeAccount(){
     printf("Please enter account number: ");
+    account=0;
     scanf("%d", &account);
     int accountStatus = checkAccount(account);
+    if(accountStatus == 2){ //fix error message to this spesific method
+        accountStatus = 10;
+    }
     if(accountStatus != 0){
-        printf(" %s \n", errorMessage[accountStatus]);
+        printf("%s \n", errorMessage[accountStatus]);
         return;
     }
     
     bank[account-901][1] = 1;     
-    printf("Closed account number %d \n", account);
+    printf("Closed account number %d\n", account);
 }
 
 /*
@@ -179,9 +219,12 @@ set new interest to all acounts
 void setInterest(){
 
     printf("Please enter interest rate: ");
+    interest=0;
     scanf("%lf", &interest);
-    if(interest<0){
-        printf(" %s \n", errorMessage[5]);
+    
+    interestStatus = checkInterest(interest);
+    if(interestStatus!=0){
+        printf("%s \n", errorMessage[interestStatus]);
         return;    
     }
     
