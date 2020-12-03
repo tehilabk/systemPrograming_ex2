@@ -1,17 +1,18 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "myBank.h"
-#include "myBank.c"
+
 
 
 int main()
 {
     bool stop = false;
     char opperationCode;
+    initializeArray();
     
     while(!stop){
         
-        printf("Please choose a transaction type: \n O-Open Account \n B-Balance Inquiry \n D-Deposit \n W-Withdrawal \n C-Close Account \n I-Interest \n P-Print \n E-Exit \n");
+        printf("Please choose a transaction type:\n O-Open Account\n B-Balance Inquiry\n D-Deposit\n W-Withdrawal\n C-Close Account\n I-Interest\n P-Print\n E-Exit\n");
         
         
         opperationCode = getchar();
@@ -54,7 +55,7 @@ int main()
                 break;
             
             default:    
-                printf(" Invalid transaction type \n\n");
+                printf("Invalid transaction type \n\n");
         }
     }
         
