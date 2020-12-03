@@ -10,8 +10,9 @@ void closeAccount();
 void setInterest();
 void print();
 
-
+void initializeArray();
 int checkAmount(double amount);
 int checkAccount(int account);
+int checkInterest(double interest);
 
 #endif //MYBANK_H
