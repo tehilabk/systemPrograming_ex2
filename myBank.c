@@ -1,8 +1,12 @@
 #include <stdio.h>
-//TODO define
-//TODO .2 to all printf
+#define MAX_ACCOUNT 50
+#define MIN_ID 901
+#define MAX_ID 950
+                              
+
+
 int i;
-double bank [50][2] = {0};//inner array(amount, status) => status = 1 for closed and 0 for open
+double bank [MAX_ACCOUNT][2] = {0};//inner array(amount, status) => status = 1 for closed and 0 for open
 
 char errorMessage[11][100] = {//errors array
     "",
@@ -22,7 +26,7 @@ int accountStatus, amountStatus, interestStatus, accountNum = 0, account;
 double interest, amount;
 
 void initializeArray(){
-    while(i<50){
+    while(i<MAX_ACCOUNT){
         bank[i][1]=1;
         i++;
     }
@@ -64,11 +68,11 @@ int checkAccount(int account){
     
     if(account<0){
         return 4;
-    } else if (account<901 || account>950){
+    } else if (account< MIN_ID || account>MAX_ID){
         return 1;
     }
 
-    if(bank[account-901][1] == 1){
+    if(bank[account-MIN_ID][1] == 1){
         return 2;
     }
     return 0;
@@ -90,12 +94,12 @@ void openAcount(){
         return;
     }
     int i;
-    if(accountNum>49){
-        for (i=0; i<50; i++){
+    if(accountNum>=MAX_ACCOUNT){
+        for (i=0; i<MAX_ACCOUNT; i++){
             if (bank [i][1] == 1 ){ 
                 bank [i][0]= amount;    
                 bank [i][1]=0;
-                printf ("New account number is: %d \n\n" , i+901);
+                printf ("New account number is: %d \n\n" , i+MIN_ID);
                 return;
             }
         }
@@ -108,14 +112,14 @@ void openAcount(){
         if (bank [i][1] == 1 ){
             bank [i][0]= amount;
             bank [i][1]=0;
-            printf ("New account number is: %d \n\n" , i+901);
+            printf ("New account number is: %d \n\n" , i+MIN_ID);
             return;
         }
     }
     
     bank[accountNum][0]= amount;
     bank[accountNum][1]= 0;
-    printf ("New account number is: %d \n\n" , accountNum+901);
+    printf ("New account number is: %d \n\n" , accountNum+MIN_ID);
     accountNum++;
         
 }
@@ -134,7 +138,7 @@ void getBalance(){
         return;
     }
     
-    printf(" The balance of account number %d is: %.2lf\n\n" , account , bank[account-901][0]);
+    printf(" The balance of account number %d is: %.2lf\n\n" , account , bank[account-MIN_ID][0]);
 }
 
 /*
@@ -163,8 +167,8 @@ void deposit(){
         return;
     }
 
-    bank[account-901][0] += amount;
-    printf(" The new balance is: %.2lf\n", bank[account-901][0]);
+    bank[account-MIN_ID][0] += amount;
+    printf(" The new balance is: %.2lf\n", bank[account-MIN_ID][0]);
 }
 /*
 withdraw money from account
@@ -189,8 +193,8 @@ void withdrawal(){
         return;
     }
 
-    bank[account-901][0] -= amount;
-    printf("The new balance is: %.2lf\n", bank[account-901][0]);
+    bank[account-MIN_ID][0] -= amount;
+    printf("The new balance is: %.2lf\n", bank[account-MIN_ID][0]);
 }
 
 /*
@@ -209,7 +213,7 @@ void closeAccount(){
         return;
     }
     
-    bank[account-901][1] = 1;     
+    bank[account-MIN_ID][1] = 1;     
     printf("Closed account number %d\n", account);
 }
 
@@ -250,7 +254,7 @@ void print(){
     int iAccount=0;
     while(iAccount<accountNum){
         if(bank[iAccount][1]!=1){
-            printf("The balance of account number %d is: %.2lf \n\n" , iAccount+901 , bank[iAccount][0]);
+            printf("The balance of account number %d is: %.2lf \n\n" , iAccount+MIN_ID , bank[iAccount][0]);
         }
         iAccount++;
     }

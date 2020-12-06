@@ -1,7 +1,6 @@
 #ifndef MYBANK_H
 #define MYBANK_H
 
-
 void openAcount();
 void getBalance();
 void deposit();
