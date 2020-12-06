@@ -2,6 +2,7 @@ CC = gcc
 FLAGS = -Wall -g
 AR=ar
 
+
 all: libmyBank.a mains 
 
 main.o: main.c myBank.c myBank.h
